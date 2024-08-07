@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
 
-function App() {
+function App(){
+
+  const [response , setResponse] = useState([]);
+
+
+  async function fetchItem(type){
+    try{
+      const res = await fetch(`https://jsonplaceholder.typicode.com/${type}`);
+      if(!res.ok) throw Error("Please reload the app");
+      const data = await res.json();
+      setResponse(data);
+    }
+    catch(err){
+      console.log(err.message);
+    }
+  }
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div className="container">
+        <header className="heading">
+          <button onClick={async ()=>{await fetchItem('users')}}>User</button>
+        </header>
+        <header className="heading">
+          <button onClick={async ()=>{await fetchItem('comments')}}>comments</button>
+        </header>
+        <header className="heading">
+          <button onClick={async ()=>{await fetchItem('posts')}}>posts</button>
+        </header>
+      </div>
+
+    <p>
+      {
+        (response.length > 0)?
+      JSON.stringify(response) : 'No data Is Available'
+}
+    </p>
     </div>
-  );
+  )
 }
 
 export default App;
